@@ -1,0 +1,20 @@
+﻿Build started 2/16/2011 3:19:38 PM.
+     1>Project "F:\Grafica pe calculator (licenta)\Laborator\Lab1OpenGL\Lab1OpenGL\Lab1OpenGL.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Lab1OpenGL.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+       Manifest:
+         All outputs are up-to-date.
+       FinalizeBuildStatus:
+         Deleting file "Debug\Lab1OpenGL.unsuccessfulbuild".
+         Touching "Debug\Lab1OpenGL.lastbuildstate".
+     1>Done Building Project "F:\Grafica pe calculator (licenta)\Laborator\Lab1OpenGL\Lab1OpenGL\Lab1OpenGL.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.86
