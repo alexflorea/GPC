@@ -3,6 +3,10 @@
 //TODO
 //Pastrarea formei de patrat si in cazul redimensionarii
 
+
+
+
+
 GrilaCarteziana::GrilaCarteziana(int sizeX, int sizeY)
 {
 	//O casuta pentru padding;
@@ -100,6 +104,61 @@ void GrilaCarteziana::recomputeSize(int h, int w)
 
 }
 
+void GrilaCarteziana::fillElipse(int x0,int y0,int a,int b)
+{
+int xi=0,x=0,y=b;
+double fxpyp=0.0;
+double deltaE,deltaSE,deltaS;
+vidareSegment();
+//Din motivul ca (0,0) se afla in coltul stang de sus a Grilei,
+//y+y0 va insemna -y din originea y0
+//pentru a obtine punctele in cadranul III mai facem -x
+// si inversam xi cu x
+// adica vom merge de la (-x+x0) la (xi+x0)
+adaugaSegment(y+y0,-x+x0,xi+x0); 
+while (a*a*(y-0.5)>b*b*(x+1))
+{
+	deltaE=b*b*(2*x+1);
+	deltaSE=b*b*(2*x+1)+a*a*(-2*y+1);
+	if (fxpyp+deltaE<=0.0)
+	{
+		// E este in interior
+		fxpyp+=deltaE;
+		x++;
+		setSegment(y0+y,-x+x0,xi+x0);
+	}
+	else if(fxpyp+deltaSE<=0)
+	{
+		//SE este in interior
+		fxpyp+=deltaSE;
+		x++;y--;
+		adaugaSegment(y+y0,-x+x0,xi+x0);
+	}
+}
+	while (y>0)
+	{
+		deltaSE=b*b*(2*x+1)+a*a*(-2*y+1);
+		deltaS = a*a*(-2*y+1);
+		if (fxpyp+deltaSE<=0.0)
+		{
+			//SE este interior
+			fxpyp+=deltaSE;
+			x++;
+			y--;
+		}
+		else
+		{
+			//S este in interior
+			fxpyp+=deltaS;
+			y--;
+		}
+		adaugaSegment(y+y0,-x+x0,xi+x0); 
+	}
+
+	drawSegment();
+	mirrorSegment(a,b,x0,y0);
+
+}
 void GrilaCarteziana::drawPixel(float x, float y, float size) 
 {
 	glBegin(GL_POLYGON);
@@ -235,6 +294,7 @@ void GrilaCarteziana::writeLine(int p1x, int p1y, int p2x, int p2y, int width)
 
 void GrilaCarteziana::writePixel(int x, int y, bool enable, int width)
 {
+	if ((x>=100)||(y>=100)) return;
 	for(int i = x - width; i <= x + width; i++) {
 		if(i < 0 && i > sizeX)
 			continue;
@@ -246,3 +306,68 @@ void GrilaCarteziana::writePixel(int x, int y, bool enable, int width)
 	}
 }
 
+void GrilaCarteziana::vidareSegment(){
+		for (int i=0;i<200;i++){
+			ssm[i].x=0;
+			ssm[i].x0=0;
+			ssm[i].y=0;
+			n=0;
+		}
+	}
+	void GrilaCarteziana::adaugaSegment(int y,int x0,int x)
+	{
+			
+		ssm[n].x=x;
+		ssm[n].x0=x0;
+		ssm[n].y=y;
+		n++;	
+	}
+		void GrilaCarteziana::setSegment(int y,int x0,int x)
+		{
+			for (int i=0;i<200;i++)
+			{
+				if (ssm[i].y==y)
+				{
+				ssm[i].x=x;
+				ssm[i].x0=x0;
+				return;
+				}
+			}
+		}
+
+		void GrilaCarteziana::drawSegment()
+		{
+		for (int i=0;i<n;i++)
+		{
+				
+			for(int j=ssm[i].x0;j<=ssm[i].x;j++)
+				writePixel(j,abs(ssm[i].y),true);
+		}
+		}
+		
+		void GrilaCarteziana::mirrorSegment(int x,int y,int x_orig,int y_orig)
+		{
+		// Cadranul IV
+		for (int i=0;i<n;i++)
+		{
+				
+			for(int j=ssm[i].x;j<=abs(ssm[i].x-ssm[i].x0)+x_orig;j++)
+				writePixel(j,abs(ssm[i].y),true);
+		}
+
+		//Cadranul II
+		for (int i=0;i<n;i++)
+		{
+				
+			for(int j=ssm[i].x0;j<=ssm[i].x;j++)
+				writePixel(j,y_orig-abs(ssm[i].y-y_orig),true);
+		}
+
+		//Cadranul I
+		for (int i=0;i<n;i++)
+		{
+				
+			for(int j=ssm[i].x;j<=abs(ssm[i].x-ssm[i].x0)+x_orig;j++)
+				writePixel(j,y_orig-abs(ssm[i].y-y_orig),true);
+		}
+		}

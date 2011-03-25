@@ -40,7 +40,11 @@ void Display2() {
 
 	grila.display();
 }
-
+void Display3() {
+	GrilaCarteziana grila(100, 100);
+	grila.fillElipse(40,40,20,10);
+	grila.display();
+}
 
 void Init(void) {
 
@@ -62,6 +66,9 @@ void Display(void) {
       break;
    case '2':
       Display2();
+      break;
+   case '3':
+      Display3();
       break;
    default:
       break;
